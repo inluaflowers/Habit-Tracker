@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace UserInterface.Menus;
 public abstract class Menu
 {
-    public abstract Selection SetActive();
+    public abstract Selection<T> SetActive<T>();
 }
 

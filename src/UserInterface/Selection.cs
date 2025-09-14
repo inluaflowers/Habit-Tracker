@@ -1,15 +1,10 @@
-﻿namespace UserInterface;
-public class Selection
-{
-    private string Name { get; set;}
-    public Selection(string name)
-    {
-        Name = name;
-    }
+﻿using UserInterface.Menus;
 
-    public override string ToString()
-    {
-        return Name;
-    }
+namespace UserInterface;
+public class Selection<T>(string name, T value, Menu nextMenu)
+{
+    public string Name = name;
+    public T Value = value;
+    public Menu NextMenu = nextMenu;
 }
 

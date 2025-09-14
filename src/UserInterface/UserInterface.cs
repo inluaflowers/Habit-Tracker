@@ -8,7 +8,7 @@ public class UserInterface
         _strategy = new AskStrategy(title);
     }
 
-    public UserInterface(string title, Selection[] menuChoices)
+    public UserInterface(string title, Selection<T>[] menuChoices)
     {
         _strategy = new SelectionStrategy(title, menuChoices);
     }
