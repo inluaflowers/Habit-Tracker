@@ -31,7 +31,7 @@ public class MainMenu : Menu
         {
             case "Add Habit Tracker":
             {
-                Mediator.Notify(this, MenuName.AddHabit);
+                Mediator.Notify(this, UserInterface.MenuName.AddHabit);
                 break;
             }
                 

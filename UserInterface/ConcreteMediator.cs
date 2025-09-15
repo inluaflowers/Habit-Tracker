@@ -7,35 +7,19 @@ public interface IMediator
 
 public class ConcreteMediator : IMediator
 {
-    private readonly Menu _mainMenu;
-    private readonly Menu _addHabitMenu;
-    public ConcreteMediator(Menu mainMenu, Menu addHabitMenu, Cache cache)
+    private UserInterface _userInterface;
+    private Cache _cache;
+    public ConcreteMediator(UserInterface userInterface, Cache cache)
     {
-        _mainMenu = mainMenu;
-        _addHabitMenu = addHabitMenu;
-        _mainMenu.SetMediator(this);
+        _userInterface = userInterface;
+        _userInterface.SetMediator(this);
+
+        _cache = cache;
+        _cache.SetMediator(this);
     }
     public void Notify(object? sender, object? payload)
     {
-        switch (payload)
-        {
-            case MenuName.Main:
-                _mainMenu.Display();
-                break;
-            case MenuName.AddHabit:
-                _addHabitMenu.Display();
-                break;
-        }
+
     }
 }
 
-public enum MenuName
-{
-    Main,
-    ViewHabit,
-    LogHabit,
-    AddHabit,
-    EditHabit,
-    EditUnitOfMeasurement,
-    Exit
-}
