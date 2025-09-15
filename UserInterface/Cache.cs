@@ -1,17 +1,30 @@
-﻿namespace UserInterface;
-public class Cache(IMediator? mediator = null)
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace UserInterface;
+public class Cache
 {
-    private IMediator? _mediator = mediator;
+    public Dictionary<string, object> BlankCacheDictionary = new Dictionary<string, object>();
+    public Dictionary<string, object> CacheDictionary = new Dictionary<string, object>();
 
-    internal Dictionary<string, string> AddHabitDictionary = new()
+    public void ResetCache()
     {
-        {"HabitName", ""},
-        {"Unit of Measurement", ""}
-    };
-
-    public void SetMediator(IMediator mediator)
-    {
-        _mediator = mediator;
+        CacheDictionary = BlankCacheDictionary;
     }
 }
 
+public class AddHabitCache : Cache
+{
+    public AddHabitCache()
+    {
+        BlankCacheDictionary = new Dictionary<string, object>()
+        {
+            {"Habit Name", ""},
+            {"Unit of Measurement", ""}
+        };
+        ResetCache();
+    }
+}
