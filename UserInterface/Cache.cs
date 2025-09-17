@@ -7,24 +7,16 @@ using System.Threading.Tasks;
 namespace UserInterface;
 public class Cache
 {
-    public Dictionary<string, object> BlankCacheDictionary = new Dictionary<string, object>();
     public Dictionary<string, object> CacheDictionary = new Dictionary<string, object>();
 
-    public void ResetCache()
+    public Dictionary<string, object> NewHabitDictionary = new Dictionary<string, object>()
     {
-        CacheDictionary = BlankCacheDictionary;
-    }
+        {"Habit Name", ""},
+        {"Unit of Measurement 1", ""}
+    };
+
+    public Dictionary<string, float> ConversionDictionary = new Dictionary<string, float>();
+    public int NumberOfMeasurements = 2;
+
 }
 
-public class AddHabitCache : Cache
-{
-    public AddHabitCache()
-    {
-        BlankCacheDictionary = new Dictionary<string, object>()
-        {
-            {"Habit Name", ""},
-            {"Unit of Measurement", ""}
-        };
-        ResetCache();
-    }
-}

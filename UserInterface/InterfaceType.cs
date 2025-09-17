@@ -3,27 +3,40 @@
 namespace UserInterface;
 public class InterfaceType
 {
-    public static string SelectionPrompt(string title, string[] menuChoices)
+    public static string SelectionPrompt(string title, List<string> navigationChoices)
     {
-        return AnsiConsole.Prompt(
+        var returnChoices = navigationChoices.Concat(navigationChoices).ToList();
+        var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title(title)
-                .AddChoices(menuChoices)
+                .AddChoices(navigationChoices)
         );
+        return choice;
     }
-    public static string SelectionPrompt(string title, string[] menuChoices, Dictionary<string, object> cacheDictionary)
+    public static string SelectionPrompt(string title, List<string> itemChoices, List<string> navigationChoices)
     {
-        var cacheValuesAsList = cacheDictionary.Values.ToList();
-        var cacheValuesAsStrings = cacheValuesAsList.ConvertAll(i => i.ToString());
-        var zippedChoices = menuChoices.Zip(cacheValuesAsStrings, (first, second) => first + ": " + second).ToList();
-        string[] joinedChoices;
+
+        var displayChoices = HelperMethods.ConcatFirstListWithColon(itemChoices, navigationChoices);
+        var returnChoices = itemChoices.Concat(navigationChoices).ToList();
+        var choice = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title(title)
+                .AddChoices(displayChoices)
+        );
+        return returnChoices[displayChoices.IndexOf(choice)];
+    }
+    public static string SelectionPrompt(string title, List<string> itemChoices, List<string> navigationChoices, Cache cache)
+    {
+        var displayChoices = HelperMethods.ConcatFirstListWithColon(itemChoices, navigationChoices);
+        var returnChoices = itemChoices.Concat(navigationChoices).ToList();
+        var zippedChoices = HelperMethods.Zipper(displayChoices, cache.CacheDictionary.Values.ToList(), fill: true);
 
         var choice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title(title)
                 .AddChoices(zippedChoices)
         );
-        return menuChoices[zippedChoices.IndexOf(choice)];
+        return returnChoices[zippedChoices.IndexOf(choice)];
     }
     public static T AskPrompt<T>(string title)
     {

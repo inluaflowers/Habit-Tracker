@@ -1,4 +1,6 @@
 ﻿using SQLHandler;
 using UserInterface;
+using UserInterface.States;
 
-InterfaceContext interfaceContext = new InterfaceContext(new MainMenu());
+Console.Clear();
+InterfaceContext interfaceContext = new InterfaceContext(new MainMenuState());
