@@ -24,7 +24,11 @@ public class ConfirmManyState<T, TU>(string itemToConfirm, Cache Cache) : State
                 Context.TransitionTo(new TU());
                 break;
         }
+    }
 
+    public override void BuildMenuActions()
+    {
+        throw new NotImplementedException();
     }
 }
 public class ConfirmOneState<T>(string itemToConfirm, Action action) : State
@@ -45,6 +49,11 @@ public class ConfirmOneState<T>(string itemToConfirm, Action action) : State
         }
         Context.TransitionTo(new T());
     }
+
+    public override void BuildMenuActions()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class EnterNameState<T>(string itemToName) : State
@@ -56,6 +65,11 @@ public class EnterNameState<T>(string itemToName) : State
         var choice = InterfaceType.AskPrompt<string>(_title);
         Context.Cache.CacheDictionary[itemToName] = choice;
         Context.TransitionTo(new T());
+    }
+
+    public override void BuildMenuActions()
+    {
+        throw new NotImplementedException();
     }
 }
 
@@ -73,5 +87,9 @@ public class EnterNameAndFactorState<T>(string itemToName, string baseUnitOfMeas
         Context.Cache.ConversionDictionary[unitOfMeasurementName] = factor;
 
         Context.TransitionTo(new T());
+    }
+    public override void BuildMenuActions()
+    {
+        throw new NotImplementedException();
     }
 }

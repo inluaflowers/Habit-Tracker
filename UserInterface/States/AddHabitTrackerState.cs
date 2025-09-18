@@ -1,8 +1,9 @@
-﻿using System.Xml.Linq;
+﻿using System.Reflection.Metadata;
+using System.Xml.Linq;
 using UserInterface;
 namespace UserInterface.States;
 
-public class AddHabitTrackerState : State
+/*public class AddHabitTrackerState : State
 {
     private const string Title = "Create Your Habit Tracker";
     private const string HabitName = "Habit Name";
@@ -43,5 +44,41 @@ public class AddHabitTrackerState : State
             () => Context.TransitionTo(new ConfirmManyState<MainMenuState, AddHabitTrackerState>(ConfirmNewHabit, Context.Cache));
         _stateDictionary[Cancel] = () => Context.TransitionTo(new MainMenuState());
     }
-}
+}*/
 
+public sealed class AddHabitTrackerState : State
+{
+
+    private const string StateTitle = "Build A Habit Tracker";
+    public override void BuildMenuActions()
+    {
+        AddMenuStateAction(MenuEnum.Value, "Habit Name", new EnterNameState<AddHabitTrackerState>("Habit Name"));
+        AddMenuStateAction(MenuEnum.Navigation, "Confirm", new ConfirmManyState<MainMenuState, AddHabitTrackerState>("New Habit", Context.Cache));
+        AddMenuStateAction(MenuEnum.Navigation, "Cancel", new MainMenuState());
+
+        for (var i = 1; i < Context.Cache.NumberOfMeasurements; i++)
+        {
+            var name = "";
+
+            switch (i)
+            {
+                case 1:
+                    name = "Base Unit of Measurement";
+                    AddMenuStateAction(MenuEnum.Value, name, new EnterNameState<AddHabitTrackerState>(name));
+                    break;
+                case > 1:
+                    name = $"Unit of Measurement {i}";
+                    AddMenuStateAction(MenuEnum.Value, name,
+                        new EnterNameAndFactorState<AddHabitTrackerState>(name, "Base Unit Of Measurement"));
+                    break;
+
+            }
+        }
+    }
+    public override void Display()
+    {
+        var choice = InterfaceType.SelectionPrompt(StateTitle, AllMenuItems());
+        _stateActions[choice.ItemKey]();
+    }
+
+}

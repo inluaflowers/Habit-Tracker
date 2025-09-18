@@ -9,26 +9,19 @@ namespace UserInterface.States;
 
 public class MainMenuState : State
 {
-    private readonly string _title = "Main Menu";
-    private readonly List<string> _navigationChoices = ["View Habit Tracker", "Add Habit Tracker", "Exit"];
+    private const string StateTitle = "Main Menu";
+
+    public override void BuildMenuActions()
+    {
+
+        AddMenuStateAction(MenuEnum.Navigation, "View Habit Tracker", new ViewHabitTrackerState());
+        AddMenuStateAction(MenuEnum.Navigation, "Create New Habit", new AddHabitTrackerState());
+        AddMenuStateAction(MenuEnum.Navigation, "Exit", new ExitState());
+    }
     public override void Display()
     {
-        NullContextCheck();
-        var choice = InterfaceType.SelectionPrompt(_title, _navigationChoices);
-        switch (choice)
-        {
-            case "View Habit Tracker":
-                Context.TransitionTo(new ViewHabitTrackerState());
-                break;
-            case "Add Habit Tracker":
-                Context.Cache = new Cache();
-                Context.Cache.CacheDictionary = Context.Cache.NewHabitDictionary;
-                Context.TransitionTo(new AddHabitTrackerState());
-                break;
-            case "Exit":
-                Console.Clear();
-                break;
-        }
+        var choice = InterfaceType.SelectionPrompt(StateTitle, AllMenuItems());
+        _stateActions[choice.ItemKey]();
     }
 }
 

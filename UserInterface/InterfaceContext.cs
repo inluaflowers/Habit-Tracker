@@ -13,6 +13,7 @@ public class InterfaceContext
     {
         State = state;
         State.SetContext(this);
+        State.BuildMenuActions();
         Display();
     }
 

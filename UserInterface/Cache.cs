@@ -12,7 +12,7 @@ public class Cache
     public Dictionary<string, object> NewHabitDictionary = new Dictionary<string, object>()
     {
         {"Habit Name", ""},
-        {"Unit of Measurement 1", ""}
+        {"Base Unit of Measurement", ""}
     };
 
     public Dictionary<string, float> ConversionDictionary = new Dictionary<string, float>();

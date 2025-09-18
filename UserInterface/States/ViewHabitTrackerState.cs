@@ -8,11 +8,17 @@ namespace UserInterface.States;
 
 public class ViewHabitTrackerState : State
 {
-    private readonly string _title = "Select a Habit Tracker to View";
-    private readonly List<string> _navigationChoices = ["Coding", "CPAP Usage"];
+    private const string StateTitle = "Select a Habit Tracker";
+
+    public override void BuildMenuActions()
+    {
+
+        AddMenuStateAction(MenuEnum.Navigation, "Main Menu", new MainMenuState());
+    }
     public override void Display()
     {
-        var choice = InterfaceType.SelectionPrompt(_title, _navigationChoices);
+        var choice = InterfaceType.SelectionPrompt(StateTitle, AllMenuItems());
+        _stateActions[choice.ItemKey]();
     }
 }
 
