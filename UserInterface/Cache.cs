@@ -5,18 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace UserInterface;
+
 public class Cache
 {
-    public Dictionary<string, object> CacheDictionary = new Dictionary<string, object>();
+    public Dictionary<string, MenuItem> MenuItemCache = [];
+    public Dictionary<string, Action> ActionCache = [];
+    public int MeasurementCount = 1;
 
-    public Dictionary<string, object> NewHabitDictionary = new Dictionary<string, object>()
+    public bool IsEmpty()
     {
-        {"Habit Name", ""},
-        {"Base Unit of Measurement", ""}
-    };
-
-    public Dictionary<string, float> ConversionDictionary = new Dictionary<string, float>();
-    public int NumberOfMeasurements = 2;
-
+        return (MenuItemCache.Count == 0 && ActionCache.Count == 0);
+    }
 }
+
+
+
 

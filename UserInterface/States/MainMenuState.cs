@@ -7,21 +7,23 @@ using Spectre.Console;
 
 namespace UserInterface.States;
 
-public class MainMenuState : State
+public class MainMenuState : BaseState
 {
     private const string StateTitle = "Main Menu";
-
-    public override void BuildMenuActions()
+    public override void BuildMenuStates()
     {
-
-        AddMenuStateAction(MenuEnum.Navigation, "View Habit Tracker", new ViewHabitTrackerState());
-        AddMenuStateAction(MenuEnum.Navigation, "Create New Habit", new AddHabitTrackerState());
-        AddMenuStateAction(MenuEnum.Navigation, "Exit", new ExitState());
+        AddMenuStateAction<AddHabitTrackerState>(MenuEnum.Navigation, () => new AddHabitTrackerState(), "Create New Habit");
+        AddMenuStateAction<ExitState>(MenuEnum.Navigation, () => new ExitState(), "Exit");
+        StateMenu.BuildFromDictionary();
     }
     public override void Display()
     {
-        var choice = InterfaceType.SelectionPrompt(StateTitle, AllMenuItems());
-        _stateActions[choice.ItemKey]();
+        var choice = InterfaceType.SelectionPrompt(StateTitle, StateMenu.AllMenuItems());
+        if (choice.ItemKey == "Create New Habit")
+        {
+            Context.Cache = new Cache();
+        }  
+        StateActions[choice.ItemKey]();
     }
 }
 

@@ -1,8 +1,9 @@
 ﻿namespace UserInterface.States;
 
-internal class ExitState : State
+internal class ExitState  : BaseState
 {
-    public override void BuildMenuActions()
+    
+    public override void BuildMenuStates()
     {
     }
 
@@ -10,5 +11,6 @@ internal class ExitState : State
     {
         Console.Clear();
     }
+    
 }
 

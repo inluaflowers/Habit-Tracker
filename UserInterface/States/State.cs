@@ -6,26 +6,31 @@ using System.Threading.Tasks;
 using UserInterface;
 
 namespace UserInterface.States;
-public abstract class State
+
+public abstract class BaseState
 {
-    public InterfaceContext? Context;
-    private readonly Menu _menu = new Menu();
-    public Dictionary<string, Action> _stateActions = new Dictionary<string, Action>();
+    protected Menu StateMenu = new();
+    protected Dictionary<string, Action> StateActions = [];
+    protected InterfaceContext Context;
     public void SetContext(InterfaceContext context)
     {
         Context = context;
     }
-    public  void AddMenuStateAction(MenuEnum itemType, string itemKey, State state, string? assignedName = null, float? assignedFloat = null)
+    public void AddMenuStateAction<TState>(MenuEnum itemType, Func<string, TState> stateFactory, string itemKey, string? assignedName = null,
+        float? assignedFloat = null)
+        where TState : BaseState
     {
-        _menu.AddItem(itemType, itemKey, assignedName, assignedFloat);
-        _stateActions.Add(itemKey, () => Context.TransitionTo(state));
+        StateMenu.AddItem(itemType, itemKey, assignedName, assignedFloat);
+        StateActions[itemKey] = () => Context.TransitionTo(stateFactory(itemKey));
+    }
+    public void AddMenuStateAction<TState>(MenuEnum itemType, Func<TState> stateFactory, string itemKey, string? assignedName = null,
+        float? assignedFloat = null)
+        where TState : BaseState
+    {
+        StateMenu.AddItem(itemType, itemKey, assignedName, assignedFloat);
+        StateActions[itemKey] = () => Context.TransitionTo(stateFactory());
     }
 
-    public List<MenuItem> AllMenuItems()
-    {
-        return _menu.AllMenuItems();
-    }
+    public abstract void BuildMenuStates();
     public abstract void Display();
-    public abstract void BuildMenuActions();
 }
-

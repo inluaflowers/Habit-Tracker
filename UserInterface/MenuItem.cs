@@ -1,24 +1,33 @@
 ﻿using System.Dynamic;
+using System.Net.Http.Headers;
 
 namespace UserInterface;
 
 public class Menu
 {
-    private readonly List<MenuItem> _valueItems = [];
-    private readonly List<MenuItem> _navigationItem = [];
+    private  List<MenuItem> _valueItems = [];
+    private List<MenuItem> _navigationItem = [];
+    public Dictionary<string, MenuItem> ItemDictionary = [];
     public void AddItem(MenuEnum itemType, string itemKey, string? assignedName = null, float? assignedFloat = null)
     {
-        switch (itemType)
-        {
-            case MenuEnum.Value:
-                _valueItems.Add(new MenuItem(itemKey, assignedName, assignedFloat));
-                break;
-            case MenuEnum.Navigation:
-                _navigationItem.Add(new MenuItem(itemKey, assignedName, assignedFloat));
-                break;
-            default:
-                throw new Exception("Menu Enum does not exist");
-        }
+        var menuItem = new MenuItem(itemType, itemKey, assignedName, assignedFloat);
+        ItemDictionary.Add(itemKey, menuItem);
+    }
+    public void BuildFromDictionary()
+    {
+        _valueItems = GetItemsOfType(ItemDictionary, MenuEnum.Value);
+        _navigationItem = GetItemsOfType(ItemDictionary, MenuEnum.Navigation);
+    }
+    public void BuildFromDictionary(Dictionary<string, MenuItem> menuDictionary)
+    {
+        _valueItems = GetItemsOfType(menuDictionary, MenuEnum.Value);
+        _navigationItem = GetItemsOfType(menuDictionary, MenuEnum.Navigation);
+        ItemDictionary = menuDictionary;
+    }
+
+    public static List<MenuItem> GetItemsOfType(Dictionary<string, MenuItem> menuDictionary, MenuEnum tEnum)
+    {
+        return menuDictionary.Values.Where(p => p.ItemType == tEnum).ToList();
     }
 
     public List<MenuItem> AllMenuItems()
@@ -27,14 +36,12 @@ public class Menu
     }
 
 }
-public class MenuItem(
-    string itemKey,
-    string? assignedName = null,
-    float? assignedFloat = null)
+public class MenuItem(MenuEnum itemType, string itemKey, string? assignedName = null, float? assignedFloat = null)
 {
+    public MenuEnum ItemType = itemType;
     public string ItemKey { get; set; } = itemKey;
-    private string? AssignedName { get; set; } = assignedName;
-    private float? AssignedFloat { get; set; } = assignedFloat;
+    public string? AssignedName { get; set; } = assignedName;
+    public float? AssignedFloat { get; set; } = assignedFloat;
 
     public override string ToString()
     {
@@ -47,5 +54,6 @@ public class MenuItem(
 public enum MenuEnum
 {
     Value,
-    Navigation
+    Navigation,
+    Input
 }

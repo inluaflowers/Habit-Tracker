@@ -1,6 +1,8 @@
-﻿namespace UserInterface.States;
+﻿using System.Runtime.CompilerServices;
 
-public class ConfirmManyState<T, TU>(string itemToConfirm, Cache Cache) : State
+namespace UserInterface.States;
+
+/*public class ConfirmManyState<T, TU>(string itemToConfirm, Cache Cache) : State
     where T : State, new()
     where TU : State, new()
 {
@@ -26,70 +28,70 @@ public class ConfirmManyState<T, TU>(string itemToConfirm, Cache Cache) : State
         }
     }
 
-    public override void BuildMenuActions()
+    public override void BuildMenuStates()
     {
         throw new NotImplementedException();
     }
-}
-public class ConfirmOneState<T>(string itemToConfirm, Action action) : State
-    where T : State, new()
+} */
+
+
+public class InputState<TParentState, TInput>(string itemKey) : BaseState
+    where TParentState : BaseState, new()
 {
-    private readonly string _title = $"Confirm {itemToConfirm} Selections: Y/N?\n";
+    private readonly string _title = $"Choose a {itemKey}";
     public override void Display()
     {
-        var choice = InterfaceType.AskPrompt<string>(_title);
-        switch (choice.Trim().ToLower())
+        var choice = InterfaceType.AskPrompt<TInput>(_title);
+        switch (choice)
         {
-            case "y":
-                Console.Clear();
-                action();
+            case string s:
+                Context.Cache.MenuItemCache[itemKey].AssignedName = s;
                 break;
-            case "n":
+            case float f:
+                Context.Cache.MenuItemCache[itemKey].AssignedFloat = f;
                 break;
+            default:
+                throw new Exception("Choice is Null");
         }
-        Context.TransitionTo(new T());
+        Context.TransitionTo(new TParentState());
     }
 
-    public override void BuildMenuActions()
+    public override void BuildMenuStates()
     {
-        throw new NotImplementedException();
     }
-}
 
-public class EnterNameState<T>(string itemToName) : State
-    where T : State, new()
+}
+public class EnterFactorState<TParentState>(string itemKey) : BaseState
+    where TParentState : BaseState, new()
 {
-    private readonly string _title = $"Choose a {itemToName}";
+    private readonly string _title = $"Choose a {itemKey}";
+
     public override void Display()
     {
-        var choice = InterfaceType.AskPrompt<string>(_title);
-        Context.Cache.CacheDictionary[itemToName] = choice;
-        Context.TransitionTo(new T());
+        float? choice = InterfaceType.AskPrompt<float>(_title);
+        Context.Cache.MenuItemCache[itemKey].AssignedFloat = choice;
+        Context.TransitionTo(new TParentState());
     }
 
-    public override void BuildMenuActions()
+    public override void BuildMenuStates()
     {
-        throw new NotImplementedException();
     }
-}
 
-public class EnterNameAndFactorState<T>(string itemToName, string baseUnitOfMeasurement) : State
-    where T : State, new()
+}
+public class AdditionalUnitOfMeasurement<TParentState> : BaseState
+where TParentState : BaseState, new()
 {
-    private readonly string _nameTitle = $"Name your {itemToName}";
-    private readonly string _factorOfBase = $"How many {baseUnitOfMeasurement}s are in a";
     public override void Display()
     {
-        var unitOfMeasurementName = InterfaceType.AskPrompt<string>(_nameTitle);
-        Context.Cache.CacheDictionary[itemToName] = unitOfMeasurementName;
-
-        var factor = InterfaceType.AskPrompt<float>($"{_factorOfBase} {unitOfMeasurementName}?");
-        Context.Cache.ConversionDictionary[unitOfMeasurementName] = factor;
-
-        Context.TransitionTo(new T());
+        Context.Cache.MeasurementCount++;
+        var itemKey = $"Unit of Measurement {Context.Cache.MeasurementCount}";
+        Context.Cache.MenuItemCache.Add(itemKey, new MenuItem(MenuEnum.Value, itemKey, "None"));
+        Context.Cache.ActionCache.Add(itemKey, () => Context.TransitionTo(new InputState<TParentState>(itemKey)));
+        Context.TransitionTo(new TParentState());
     }
-    public override void BuildMenuActions()
+
+    public override void BuildMenuStates()
     {
-        throw new NotImplementedException();
+
     }
 }

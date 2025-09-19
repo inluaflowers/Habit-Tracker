@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using System.Reflection.Metadata.Ecma335;
+using Spectre.Console;
 
 namespace UserInterface;
 public class InterfaceType
@@ -19,8 +20,14 @@ public class InterfaceType
         while (true)
         {
             var input = AnsiConsole.Ask<T>(title);
-            if (input is not null)
+
+            if (input is null)
             {
+                continue;
+            }
+            else
+            {
+                Console.Clear();
                 return input;
             }
         }
