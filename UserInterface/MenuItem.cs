@@ -45,8 +45,8 @@ public class MenuItem(MenuEnum itemType, string itemKey, string? assignedName = 
 
     public override string ToString()
     {
-        var namedItemString = AssignedName != null ? $": {AssignedName}" : "";
-        var floatValue = AssignedFloat != null ? AssignedFloat.ToString() : "";
+        var namedItemString = AssignedName != null ? ":\t\t" + AssignedName  : "";
+        var floatValue = AssignedFloat != null ? "\n\tFactor: " + AssignedFloat.ToString() : "";
         return $"{ItemKey}{namedItemString}{floatValue}";
     }
 }
